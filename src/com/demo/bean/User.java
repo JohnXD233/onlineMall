@@ -4,6 +4,12 @@ public class User {
 	private int uid;
 	private String uname;
 	private String upass;
+	private String realname;
+	private String email;
+	private String address;
+	private String phone;
+	private int state;//0 Î´¼¤»î  1¼¤»î
+	private String activecode;
 	
 	public User(String uname,String upass) {
 		super();
@@ -87,13 +93,6 @@ public class User {
 	public void setActivecode(String activecode) {
 		this.activecode = activecode;
 	}
-	private String realname;
-	private String email;
-	private String address;
-	private String phone;
-	private int state;
-	private String activecode;
-	
-	
+
 
 }

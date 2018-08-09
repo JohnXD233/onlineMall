@@ -7,31 +7,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.demo.bean.User;
+import com.demo.bean.Order;
 import com.demo.dao.BaseDao;
-import com.demo.dao.UserDao;
+import com.demo.dao.OrderDao;
 
-public class UserDaoImpl extends BaseDao implements UserDao{
+public class OrderDaoImpl extends BaseDao implements OrderDao{
 
 	@Override
-	public User findUser(User user) {
-
+	public Order findOrder(Order order) {
 		Connection connection=getConn();
-		String sql="select * from user where uname=? and upass=?";
+		String sql="select * from order where orderid=?";  //like '%?%' or ordertime like '%?%'" //要实现筛选查询 ，可以 like '% %' or
 		PreparedStatement pt=null;
 		ResultSet rs=null;
-		User user2=null;
+		Order order2=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
-			pt.setString(1, user.getUname());
-			pt.setString(2, user.getUpass());
+			pt.setInt(1, order.getOrderid());
 			rs=pt.executeQuery();
 			if(rs.next()) {
-				user2=new User(rs.getInt("uid"),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),
-						rs.getString(6),rs.getString(7),rs.getInt(8),rs.getString(9));
+				order2=new Order(rs.getInt(1),rs.getDate(2),rs.getDouble(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8));
 			}
-			return user2;
+			return order2;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -40,24 +37,22 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 		finally {
 			closeAll(connection, pt, rs);
 		}
-		
 		return null;
 	}
 
 	@Override
-	public List<User> getUsers() {
+	public List<Order> getOrders() {
 		Connection connection=getConn();
-		String sql="select * from user";
+		String sql="select * from order";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
-		List<User> list=new ArrayList<User>();
+		List<Order> list=new ArrayList<Order>();
 		
 		try {
 			pt=connection.prepareStatement(sql);
 			rs=pt.executeQuery();
 			while(rs.next()) {
-				list.add(new User(rs.getInt("uid"),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),
-						rs.getString(6),rs.getString(7),rs.getInt(8),rs.getString(9)));
+				list.add(new Order(rs.getInt(1),rs.getDate(2),rs.getDouble(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8)));
 			}
 			return list;
 			
@@ -71,18 +66,27 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 		return null;
 	}
 
-	
 	@Override
-	public boolean delUser(User user) {
+	public boolean alterOrder(Order order) {
 		Connection connection=getConn();
-		String sql="delete from user where uid=?";
+		String sql="update order set ordertime=?,price=?,state=?,address=?,phone=?,receiver=?,uid=? where orderid=?";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
-			pt.setString(1, user.getUname());
+			
+			pt.setDate(1, order.getOrderTime());
+			pt.setDouble(2, order.getPrice());
+			pt.setString(3, order.getState());
+			pt.setString(4, order.getAddress());
+			pt.setString(5, order.getPhone());
+			pt.setString(6, order.getReceiver());
+			pt.setInt(7, order.getUid());
+			pt.setInt(8, order.getOrderid());
+			
 			return pt.execute();
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -94,64 +98,51 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 	}
 
 	@Override
-	public boolean addUser(User user) {
+	public boolean addOrder(Order order) {
 		Connection connection=getConn();
-		String sql="insert into user(uname,upass,realname,email,address,phone,state) values(?,?,?,?,?,?,0)";
+		String sql="insert into order(ordertime,price,state,address,phone,receiver,uid) values(?,?,?,?,?,?,?)";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
-			pt.setString(1, user.getUname());
-			pt.setString(2, user.getUpass());
-			pt.setString(3, user.getRealname());
-			pt.setString(4, user.getEmail());
-			pt.setString(5, user.getAddress());
-			pt.setString(6, user.getPhone());
+			pt.setDate(1, order.getOrderTime());
+			pt.setDouble(2, order.getPrice());
+			pt.setString(3, order.getState());
+			pt.setString(4, order.getAddress());
+			pt.setString(5, order.getPhone());
+			pt.setString(6, order.getReceiver());
+			pt.setInt(7, order.getUid());
 			
 			return pt.execute();
-			
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
 			closeAll(connection, pt, rs);
-		}
-		
+		}		
 		return false;
 	}
 
 	@Override
-	public boolean alterUser(User user) {
+	public boolean delOrder(Order order) {
 		Connection connection=getConn();
-		String sql="update user set upass=?,realname=?,email=?,address=?,phone=?,state=?,activecode=? where uid=?";
+		String sql="delete from order where orderid=?";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
-			
-			pt.setString(1, user.getUpass());
-			pt.setString(2, user.getRealname());
-			pt.setString(3, user.getEmail());
-			pt.setString(4, user.getAddress());
-			pt.setString(5, user.getPhone());
-			pt.setInt(6, user.getState());
-			pt.setString(7, user.getActivecode());
-			pt.setString(8, user.getUname());
-			
+			pt.setInt(1,order.getOrderid());
 			return pt.execute();
-			
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
 			closeAll(connection, pt, rs);
-		}
+		}		
 		return false;
 	}
 

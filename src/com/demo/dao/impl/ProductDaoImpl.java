@@ -7,31 +7,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.demo.bean.User;
+import com.demo.bean.Product;
 import com.demo.dao.BaseDao;
-import com.demo.dao.UserDao;
+import com.demo.dao.ProductDao;
 
-public class UserDaoImpl extends BaseDao implements UserDao{
+public class ProductDaoImpl extends BaseDao implements ProductDao{
 
 	@Override
-	public User findUser(User user) {
-
+	public Product findProduct(Product product) {
 		Connection connection=getConn();
-		String sql="select * from user where uname=? and upass=?";
+		String sql="select * from product where pid=?";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
-		User user2=null;
+		Product product2=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
-			pt.setString(1, user.getUname());
-			pt.setString(2, user.getUpass());
+			pt.setInt(1, product.getPid());
 			rs=pt.executeQuery();
 			if(rs.next()) {
-				user2=new User(rs.getInt("uid"),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),
-						rs.getString(6),rs.getString(7),rs.getInt(8),rs.getString(9));
+				product2=new Product(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getShort(7));
 			}
-			return user2;
+			return product2;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -39,25 +36,23 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 		}
 		finally {
 			closeAll(connection, pt, rs);
-		}
-		
+		}		
 		return null;
 	}
 
 	@Override
-	public List<User> getUsers() {
+	public List<Product> getProducts() {
 		Connection connection=getConn();
-		String sql="select * from user";
+		String sql="select * from product";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
-		List<User> list=new ArrayList<User>();
+		List<Product> list=new ArrayList<Product>();
 		
 		try {
 			pt=connection.prepareStatement(sql);
 			rs=pt.executeQuery();
 			while(rs.next()) {
-				list.add(new User(rs.getInt("uid"),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),
-						rs.getString(6),rs.getString(7),rs.getInt(8),rs.getString(9)));
+				list.add(new Product(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getShort(7)));
 			}
 			return list;
 			
@@ -71,88 +66,79 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 		return null;
 	}
 
-	
 	@Override
-	public boolean delUser(User user) {
+	public boolean alterProduct(Product product) {
 		Connection connection=getConn();
-		String sql="delete from user where uid=?";
+		String sql="update product set pname=?,priceinmall=?,priceinmarket=?,describe=?,picture=?,classtwoid=? where pid=?";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
-			pt.setString(1, user.getUname());
+			
+			pt.setString(1, product.getPname());
+			pt.setString(2, product.getPriceInMall());
+			pt.setString(3, product.getPriceInMarket());
+			pt.setString(4, product.getDescribes());
+			pt.setString(5, product.getPicture());
+			pt.setInt(6, product.getClassTwoId());
+			pt.setInt(7, product.getPid());
+			
 			return pt.execute();
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
 			closeAll(connection, pt, rs);
-		}
-		return false;
+		}		return false;
 	}
 
 	@Override
-	public boolean addUser(User user) {
+	public boolean addProduct(Product product) {
 		Connection connection=getConn();
-		String sql="insert into user(uname,upass,realname,email,address,phone,state) values(?,?,?,?,?,?,0)";
+		String sql="insert into product(pname,priceinmall,priceinmarket,describe,picture,classtwoid) values(?,?,?,?,?,?)";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
-			pt.setString(1, user.getUname());
-			pt.setString(2, user.getUpass());
-			pt.setString(3, user.getRealname());
-			pt.setString(4, user.getEmail());
-			pt.setString(5, user.getAddress());
-			pt.setString(6, user.getPhone());
+			pt.setString(1, product.getPname());
+			pt.setString(2, product.getPriceInMall());
+			pt.setString(3, product.getPriceInMarket());
+			pt.setString(4, product.getDescribes());
+			pt.setString(5, product.getPicture());
+			pt.setInt(6, product.getClassTwoId());
 			
 			return pt.execute();
-			
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
 			closeAll(connection, pt, rs);
-		}
-		
-		return false;
+		}		return false;
 	}
 
 	@Override
-	public boolean alterUser(User user) {
+	public boolean delProduct(Product product) {
 		Connection connection=getConn();
-		String sql="update user set upass=?,realname=?,email=?,address=?,phone=?,state=?,activecode=? where uid=?";
+		String sql="delete from product where pid=?";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
-			
-			pt.setString(1, user.getUpass());
-			pt.setString(2, user.getRealname());
-			pt.setString(3, user.getEmail());
-			pt.setString(4, user.getAddress());
-			pt.setString(5, user.getPhone());
-			pt.setInt(6, user.getState());
-			pt.setString(7, user.getActivecode());
-			pt.setString(8, user.getUname());
-			
+			pt.setInt(1,product.getPid());
 			return pt.execute();
-			
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
 			closeAll(connection, pt, rs);
-		}
-		return false;
+		}		return false;
 	}
 
 }

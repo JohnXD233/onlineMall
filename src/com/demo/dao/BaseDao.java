@@ -33,7 +33,7 @@ public class BaseDao {
 	 */
 
 	public Connection getConn() {
-		if (connection == null) {
+		
 			// 建立连接
 			try {
 				connection = DriverManager.getConnection(Resource.url, Resource.userName, Resource.password);
@@ -41,7 +41,7 @@ public class BaseDao {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		
 		return connection;
 	}
 

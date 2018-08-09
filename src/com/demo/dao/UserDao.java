@@ -22,5 +22,24 @@ public interface UserDao {
 	 */
 	List<User> getUsers();
 
+	/**
+	 * 删除用户，根据唯一的uid
+	 * @param user 
+	 * @return
+	 */
 	boolean delUser(User user);
+	
+	/**
+	 * 用户注册，增加用户
+	 * @param user
+	 * @return
+	 */
+	boolean addUser(User user);
+	
+	/**
+	 * 修改用户信息:根据uid定位用户，修改其他信息，这边最好的是传入一个全新的user，uname不变，其他都在业务逻辑写好了值，这边直接全部改
+	 * @param user
+	 * @return
+	 */
+	boolean alterUser(User user);
 }

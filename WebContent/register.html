@@ -21,6 +21,62 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script type="text/javascript" src="js/megamenu.js"></script>
 <script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
 <script src="js/menu_jquery.js"></script>
+
+<!-- 验证码 -->
+<style type="text/css">
+	 #code{  
+                font-family:Arial;  
+                font-style:italic;  
+                font-weight:bold;  
+                border:0;  
+                letter-spacing:2px;  
+                color:blue;  
+                margin-top:5px;
+            }
+</style>
+<script>
+//设置一个全局的变量，便于保存验证码
+var code;
+function createCode(){
+    //首先默认code为空字符串
+    code = '';
+    //设置长度，这里看需求，我这里设置了4
+    var codeLength = 4;
+    var codeV = document.getElementById('code');
+    //设置随机字符
+    var random = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R', 'S','T','U','V','W','X','Y','Z');
+    //循环codeLength 我设置的4就是循环4次
+    for(var i = 0; i < codeLength; i++){
+        //设置随机数范围,这设置为0 ~ 36
+         var index = Math.floor(Math.random()*36);
+         //字符串拼接 将每次随机的字符 进行拼接
+         code += random[index]; 
+    }
+    //将拼接好的字符串赋值给展示的Value
+    codeV.value = code;
+}
+
+//下面就是判断是否== 的代码，无需解释
+function validate(){
+    var oValue = document.getElementById('inputCheckCode').value.toUpperCase();
+    if(oValue ==0){
+        alert('请输入验证码');
+    }else if(oValue != code){
+        alert('验证码不正确，请重新输入');
+        oValue = ' ';
+        createCode();
+    }else{
+        window.open('http://www.baidu.com','_self');
+    }
+}
+
+//设置此处的原因是每次进入界面展示一个随机的验证码，不设置则为空
+window.onload = function (){
+
+    createCode();
+}
+</script>
+
 </head>
 <body>
 <!-- header_top -->
@@ -69,7 +125,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						                    <input type="submit" id="login" value="Sign in">
 						                	<label for="checkbox"><input type="checkbox" id="checkbox"> <i>Remember me</i></label>
 						            	</fieldset>
-						            <span><a href="#">Forgot your password?</a></span>
+						            <span><a href="#">Forgot your password?</a></span><br/>
+						            
 								</form>
 							</div>
 						</div>
@@ -799,23 +856,40 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		})();
 		</script>
 		 <div class="registration_form">
-		 <!-- Form -->
-			<form id="registration_form" action="contact.php" method="post">
+		 <!-- Form registerServlet采用ajax-->
+			<form id="registration_form" method="post">
 				<div>
 					<label>
-						<input placeholder="first name:" type="text" tabindex="1" required autofocus>
+						<input placeholder="userName:" type="text" tabindex="1" name="userName" required autofocus>
 					</label>
 				</div>
 				<div>
 					<label>
-						<input placeholder="last name:" type="text" tabindex="2" required autofocus>
+						<input placeholder="realName:" type="text" tabindex="2" name="realName" required autofocus>
 					</label>
 				</div>
 				<div>
 					<label>
-						<input placeholder="email address:" type="email" tabindex="3" required>
+						<input placeholder="email:" type="email" tabindex="3" name="email" required>
 					</label>
 				</div>
+				<div>
+					<label>
+						<input placeholder="address:" type="text" tabindex="6" name="address" required>
+					</label>
+				</div>
+				<div>
+					<label>
+						<input placeholder="phone:" type="text" tabindex="7" name="phone" required>
+					</label>
+				</div>
+				<!-- 实现验证码的功能 -->
+				
+				<div>  
+        			<input type = "text" id = "inputCheckCode" placeholder="check code:"/>  
+        			<input type = "button" id="code" onclick="createCode()"/>  
+        			<input type = "button" value = "验证" onclick = "validate()" style="margin-top:5px;"/>  
+    			</div> 
 				<div class="sky-form">
 					<div class="sky_form1">
 						<ul>
@@ -827,12 +901,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				</div>
 				<div>
 					<label>
-						<input placeholder="password" type="password" tabindex="4" required>
+						<input placeholder="password" type="password" tabindex="4" name="password" required>
 					</label>
 				</div>						
 				<div>
 					<label>
-						<input placeholder="retype password" type="password" tabindex="4" required>
+						<input placeholder="retype password" type="password" tabindex="5" required>
 					</label>
 				</div>	
 				<div>
@@ -849,19 +923,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		<h2>existing user</h2>
 		 <div class="registration_form">
 		 <!-- Form -->
-			<form id="registration_form" action="contact.php" method="post">
+			<form id="login_form" method="post">
 				<div>
 					<label>
-						<input placeholder="email:" type="email" tabindex="3" required>
+						<input placeholder="username:" type="text" tabindex="3" name="login-uname" id="login-uname" required>
 					</label>
 				</div>
 				<div>
 					<label>
-						<input placeholder="password" type="password" tabindex="4" required>
+						<input placeholder="password" type="password" tabindex="4" name="login-upass" id="login-uname" required>
 					</label>
 				</div>						
 				<div>
-					<input type="submit" value="sign in" id="register-submit">
+					<input type="submit" value="sign in" id="login-submit">
 				</div>
 				<div class="forget">
 					<a href="#">forgot your password</a>
@@ -963,4 +1037,64 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	</div>
 </div>
 </body>
+<script type="text/javascript">
+$(function(){
+	
+	$("#register-submit").click(function(){
+		$.ajax({
+			url:"ruserServlet",
+			data:{"userName":userName,
+				"realName":realName,
+				"email":email,
+				"address":address,
+				"phone":phone,
+				"password":password,
+				"oper":"register"},
+			dataType:"json",
+			type:"POST",
+			success:function(data){
+				//console.log(data);
+				if(data.status=="1"){
+					toastr.success("注册成功","用户注册");
+					$("#login-uname").val(data.uname);
+					$("#login-upass").val(data.upass);
+				}
+				else{
+					toastr.error("注册失败","用户注册");
+				}
+			},
+			error:function(){
+				toastr.error("网络错误","用户注册");
+			}
+		}); 
+	});
+	
+	$("#login-submit").click(function(){
+		$.ajax({
+			url:"userServlet",
+			data:{"username":login-uname,
+				"password":login-upass,
+				"checkbox":"false",  //checkbox 表是否写入cookie
+				"oper":"login"},
+			dataType:"json",
+			type:"POST",
+			success:function(data){
+				//console.log(data);
+				if(data.status=="1"){
+					toastr.success("登录成功","用户登录");
+					window.location.href="index.jsp";//不用传数据，那边自动判断session
+				}
+				else{
+					toastr.error("登录失败","用户登录");
+				}
+			},
+			error:function(){
+				
+				toastr.error("网络错误","用户登录");
+			}
+		}); 
+	});
+});
+
+</script>
 </html>
