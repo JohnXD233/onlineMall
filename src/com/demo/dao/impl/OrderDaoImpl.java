@@ -16,7 +16,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 	@Override
 	public Order findOrder(Order order) {
 		Connection connection=getConn();
-		String sql="select * from order where orderid=?";  //like '%?%' or ordertime like '%?%'" //要实现筛选查询 ，可以 like '% %' or
+		String sql="select * from orders where orderid=?";  //like '%?%' or ordertime like '%?%'" //要实现筛选查询 ，可以 like '% %' or
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		Order order2=null;
@@ -26,7 +26,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 			pt.setInt(1, order.getOrderid());
 			rs=pt.executeQuery();
 			if(rs.next()) {
-				order2=new Order(rs.getInt(1),rs.getDate(2),rs.getDouble(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8));
+				order2=new Order(rs.getInt(1),rs.getDate(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8));
 			}
 			return order2;
 			
@@ -43,7 +43,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 	@Override
 	public List<Order> getOrders() {
 		Connection connection=getConn();
-		String sql="select * from order";
+		String sql="select * from orders";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		List<Order> list=new ArrayList<Order>();
@@ -52,7 +52,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 			pt=connection.prepareStatement(sql);
 			rs=pt.executeQuery();
 			while(rs.next()) {
-				list.add(new Order(rs.getInt(1),rs.getDate(2),rs.getDouble(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8)));
+				list.add(new Order(rs.getInt(1),rs.getDate(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8)));
 			}
 			return list;
 			
@@ -69,7 +69,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 	@Override
 	public boolean alterOrder(Order order) {
 		Connection connection=getConn();
-		String sql="update order set ordertime=?,price=?,state=?,address=?,phone=?,receiver=?,uid=? where orderid=?";
+		String sql="update orders set ordertime=?,price=?,state=?,address=?,phone=?,receiver=?,uid=? where orderid=?";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
@@ -77,7 +77,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 			pt=connection.prepareStatement(sql);
 			
 			pt.setDate(1, order.getOrderTime());
-			pt.setDouble(2, order.getPrice());
+			pt.setString(2, order.getPrice());
 			pt.setString(3, order.getState());
 			pt.setString(4, order.getAddress());
 			pt.setString(5, order.getPhone());
@@ -100,14 +100,14 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 	@Override
 	public boolean addOrder(Order order) {
 		Connection connection=getConn();
-		String sql="insert into order(ordertime,price,state,address,phone,receiver,uid) values(?,?,?,?,?,?,?)";
+		String sql="insert into orders(ordertime,price,state,address,phone,receiver,uid) values(?,?,?,?,?,?,?)";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
 		try {
 			pt=connection.prepareStatement(sql);
 			pt.setDate(1, order.getOrderTime());
-			pt.setDouble(2, order.getPrice());
+			pt.setString(2, order.getPrice());
 			pt.setString(3, order.getState());
 			pt.setString(4, order.getAddress());
 			pt.setString(5, order.getPhone());
@@ -128,7 +128,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 	@Override
 	public boolean delOrder(Order order) {
 		Connection connection=getConn();
-		String sql="delete from order where orderid=?";
+		String sql="delete from orders where orderid=?";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
@@ -144,6 +144,33 @@ public class OrderDaoImpl extends BaseDao implements OrderDao{
 			closeAll(connection, pt, rs);
 		}		
 		return false;
+	}
+
+	@Override
+	public Order findOrderByUid(Order order) {
+		Connection connection=getConn();
+		String sql="select * from orders where uid=?"; 
+		PreparedStatement pt=null;
+		ResultSet rs=null;
+		Order order2=null;
+		
+		try {
+			pt=connection.prepareStatement(sql);
+			pt.setInt(1, order.getUid());
+			rs=pt.executeQuery();
+			if(rs.next()) {
+				order2=new Order(rs.getInt(1),rs.getDate(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getInt(8));
+			}
+			return order2;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(connection, pt, rs);
+		}
+		return null;
 	}
 
 }

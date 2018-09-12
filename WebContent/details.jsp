@@ -817,8 +817,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<p>when an unknown printer took a galley of type and scrambled it to make</p>
 						<div class="price">
 							<span class="text">Price:</span>
-							<span class="price-new">${product.priceInMall }</span><span class="price-old">${product.priceInMall }</span> 
-							<span class="price-tax">${product.priceInMarket }</span><br>
+							<span class="price-new">${product.priceInMall }</span><span class="price-old">${product.priceInMarket }</span> 
+							<br>
 							<span class="points"><small>Price in reward points: 400</small></span><br>
 						</div>
 					<div class="det_nav1">
@@ -836,7 +836,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<a href="/onlineMall/userServlet?pid=${product.pid }&oper=buy">buy</a>
 					</div>
 					<div class="btn_form">
-						<a href="/onlineMall/userServlet?pid=${product.pid }&oper=shoppingcar">Add to cart</a>
+						<a href="/onlineMall/userServlet?pid=${product.pid }&oper=shoppingcar">Add to car</a>
 					</div>
 					<a href="#"><span>login to save in wishlist </span></a>
 					

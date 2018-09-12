@@ -45,4 +45,30 @@ public class ProductService {
 		product.setPid(pid);
 		return productDao.findProduct(product);
 	}
+	
+	/**
+	 * 查询热门商品
+	 * @param classTwoId
+	 * @return
+	 */
+	public List<Product> findHotProducts(int classTwoId){
+		return productDao.findHotProducts(classTwoId);
+	}
+	
+	/**
+	 * 根据二级分类id查询商品
+	 * @param classTwoId
+	 * @return
+	 */
+	public List<Product> findProductByClassTwoId(int classTwoId){
+		List<Product> list=new ArrayList<>();
+		
+		List<Product> source=productDao.getProducts();
+		for(Product product : source) {
+			if(product.getClassTwoId()==classTwoId)
+				list.add(product);
+		}
+		
+		return list;
+	}
 }

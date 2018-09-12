@@ -7,11 +7,14 @@ import org.junit.Test;
 
 import com.demo.bean.ClassTwo;
 import com.demo.bean.Product;
+import com.demo.bean.ShoppingCar;
 import com.demo.bean.User;
 import com.demo.dao.impl.ClassTwoDaoImpl;
 import com.demo.dao.impl.ProductDaoImpl;
+import com.demo.dao.impl.ShoppingCarDaoImpl;
 import com.demo.dao.impl.UserDaoImpl;
 import com.demo.service.ProductService;
+import com.demo.service.ShoppingCarService;
 /**
  * 测试操作数据库 的 函数类
  * @author ·
@@ -52,5 +55,15 @@ public class TestDao {
 	public void testFindProduct() {
 		Product product=new ProductService().findProduct(182);
 		Assert.assertNotNull(product);
+	}
+	
+	@Test
+	public void testfindRecords() {
+	/*	List<ShoppingCar> list=new ShoppingCarDaoImpl().findRecords();
+		Assert.assertNotNull(list);*/
+		List<ShoppingCar> list=new ShoppingCarService().findRecords(1);
+		System.out.println(list.size());
+		Assert.assertNotNull(list);
+	
 	}
 }

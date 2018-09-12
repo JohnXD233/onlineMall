@@ -43,7 +43,7 @@ public class ShoppingCarDaoImpl extends BaseDao implements ShoppingCarDao{
 	}
 
 	@Override
-	public List<ShoppingCar> findRecords(int uid) {
+	public List<ShoppingCar> findRecords() {
 		Connection connection=getConn();
 		String sql="select * from shoppingcar";
 		PreparedStatement pt=null;
@@ -70,7 +70,56 @@ public class ShoppingCarDaoImpl extends BaseDao implements ShoppingCarDao{
 
 	@Override
 	public boolean delRecord(int carid) {
-		// TODO Auto-generated method stub
+		Connection connection=getConn();
+		String sql="delete * from shoppingcar where carid=?";
+		PreparedStatement pt=null;
+		ResultSet rs=null;
+		
+		try {
+			pt=connection.prepareStatement(sql);
+			pt.setInt(1, carid);
+			return pt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean addRecord(ShoppingCar shoppingCar) {
+		Connection connection=getConn();
+		String sql="insert into shoppingcar(pid,uid) values(?,?)";
+		PreparedStatement pt=null;
+		ResultSet rs=null;
+		
+		try {
+			pt=connection.prepareStatement(sql);
+			pt.setInt(1, shoppingCar.getPid());
+			pt.setInt(2, shoppingCar.getUid());
+			return pt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean delAllRecord(int uid) {
+		Connection connection=getConn();
+		String sql="delete * from shoppingcar where uid=?";
+		PreparedStatement pt=null;
+		ResultSet rs=null;
+		
+		try {
+			pt=connection.prepareStatement(sql);
+			pt.setInt(1, uid);
+			return pt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 

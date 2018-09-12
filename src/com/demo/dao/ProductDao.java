@@ -42,4 +42,11 @@ public interface ProductDao {
 	 * @return
 	 */
 	boolean delProduct(Product product);
+	
+	/**
+	 * 查询热门商品，根据二级分类ID
+	 * @param classTwoId
+	 * @return
+	 */
+	List<Product> findHotProducts(int classTwoId);
 }

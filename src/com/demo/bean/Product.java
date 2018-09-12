@@ -13,6 +13,21 @@ public class Product {
 	private String describes;
 	private String picture;
 	private int classTwoId;
+	private int clickCount;//µã»÷Á¿
+	
+	public Product(int pid, String pname, String priceInMall, String priceInMarket, String describes, String picture,
+			int classTwoId, int clickCount) {
+		super();
+		this.pid = pid;
+		this.pname = pname;
+		this.priceInMall = priceInMall;
+		this.priceInMarket = priceInMarket;
+		this.describes = describes;
+		this.picture = picture;
+		this.classTwoId = classTwoId;
+		this.clickCount = clickCount;
+	}
+	
 	public int getPid() {
 		return pid;
 	}
@@ -74,6 +89,12 @@ public class Product {
 	}
 	public Product() {
 		super();
+	}
+	public int getClickCount() {
+		return clickCount;
+	}
+	public void setClickCount(int clickCount) {
+		this.clickCount = clickCount;
 	}
 	
 }

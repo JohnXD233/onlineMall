@@ -1,7 +1,10 @@
 package com.demo.servlet;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -11,9 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.demo.bean.Order;
 import com.demo.bean.Product;
+import com.demo.bean.ShoppingCar;
 import com.demo.bean.User;
+import com.demo.service.OrderService;
 import com.demo.service.ProductService;
+import com.demo.service.ShoppingCarService;
 import com.demo.service.UserService;
 import com.google.gson.Gson;
 
@@ -24,6 +31,9 @@ import com.google.gson.Gson;
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserService userService = new UserService();
+	private ShoppingCarService shoppingCarService=new ShoppingCarService();
+	private ProductService productServic=new ProductService();
+	private OrderService orderService=new OrderService();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -159,23 +169,79 @@ public class UserServlet extends HttpServlet {
 				request.getRequestDispatcher("details.jsp").forward(request, response);
 			}
 		}
-		else if(oper.equals("buy")) {
-			//这边购买也直接加入购物车
+		else if(oper.equals("shoppingcar")) {
+			//这边shoppingcar 加入购物车和      立即购买购买时不一样的  立即购买转到订单确认页面
+			
+			//这边购买也直接加入购物车,先加该物品到购物车，再返回所有的购物车物品
 			int pid=Integer.parseInt(request.getParameter("pid"));
-			Product product=new ProductService().findProduct(pid);
-			request.setAttribute("product", product);
-			if(product!=null) {
+			
+			System.out.println(pid);
+			
+			User login_user=(User) request.getSession().getAttribute("login_user");
+			ShoppingCar shoppingCar=new ShoppingCar();
+			shoppingCar.setPid(pid);
+			shoppingCar.setUid(login_user.getUid());
+			
+			shoppingCarService.addRecord(shoppingCar);//加入购物车
+			
+			//获取该用户的所有购物车
+			List<ShoppingCar> shoppingCars=shoppingCarService.findRecords(login_user.getUid());
+			
+			
+			//获取所有购物车中对应的商品
+			List<Product> products=new ArrayList<>();
+			for(ShoppingCar shoppingCar2:shoppingCars)
+			{
+				if(shoppingCar2.getPid()!=-1) {
+					products.add(productServic.findProduct(shoppingCar2.getPid()));
+				}
+			}
+			
+			
+			//这边采用请求转发返回给请求页面
+			request.setAttribute("products", products);
+			if(products!=null) {
 				request.getRequestDispatcher("checkout.jsp").forward(request, response);
 			}
 			
+			
 		}
-		else if(oper.equals("shoppingcar")) {
+		else if(oper.equals("fillorder")) {
+			//将购物车中的单件商品提交订单,这边是在购物车中购买    原来的order似乎传递出错
 			int pid=Integer.parseInt(request.getParameter("pid"));
-			Product product=new ProductService().findProduct(pid);
-			request.setAttribute("product", product);
-			if(product!=null) {
-				request.getRequestDispatcher("checkout.jsp").forward(request, response);
-			}
+			String receiver=request.getParameter("receiver");
+			String address=request.getParameter("address");
+			String phone=request.getParameter("phone");
+			
+			
+			//订单的电话 地址 收货人 均要用户输入
+			//insert into order(ordertime,price,state,address,phone,receiver,uid) values(?,?,?,?,?,?,?)
+			
+			Product product=productServic.findProduct(pid);
+			Order order=new Order();
+			order.setReceiver(receiver);
+			order.setAddress(address);
+			order.setPhone(phone);
+			
+			order.setPrice(product.getPriceInMall());
+			order.setState("1");
+			order.setUid(((User)request.getSession().getAttribute("login_user")).getUid());
+			order.setOrderTime(new Date(new java.util.Date().getTime()));
+			
+			//System.out.println(address); //成功读取到从模态窗口传来的信息
+			orderService.addOrder(order);
+			
+			//订单加入成功，这边还要删除购物车中的该条记录，以及，订单项的更新，后续界面显示的问题。。。。。。。。。。。。。。。。
+			
+			
+			request.getRequestDispatcher("checkout.jsp").forward(request, response);
+			//返回显示的问题，加入购物车还没成功
+			
+			//这边不是使用ajax，所以  返回给请求页面要 请求转发  forward 
+			
+		}
+		else if(oper.equals("buy")) {
+			 //立即购买购买时不一样的  立即购买转到订单确认页面
 		}
 	}
 

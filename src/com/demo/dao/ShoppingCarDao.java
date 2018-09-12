@@ -18,11 +18,11 @@ public interface ShoppingCarDao {
 	ShoppingCar findRecord(ShoppingCar shoppingCar);
 	
 	/**
-	 * 查出所有的购物车记录，service中再筛选，前提是数据量不大，这样可以，但是为了方便这边直接传UID，不管是否包含业务逻辑
+	 * 查出所有的购物车记录，service中再筛选，前提是数据量不大，这样可以，
 	 * @param uid
 	 * @return
 	 */
-	List<ShoppingCar> findRecords(int uid);
+	List<ShoppingCar> findRecords();
 	
 	/**
 	 * 用唯一标识一条购物车记录的 carid 主键来定位删除
@@ -30,4 +30,18 @@ public interface ShoppingCarDao {
 	 * @return
 	 */
 	boolean delRecord(int carid);
+	
+	/**
+	 * 增加购物车信息
+	 * @param shoppingCar
+	 * @return
+	 */
+	boolean addRecord(ShoppingCar shoppingCar);
+	
+	/**
+	 * 根据用户的uid，清空购物车
+	 * @param uid
+	 * @return
+	 */
+	boolean delAllRecord(int uid);
 }

@@ -10,11 +10,11 @@ import java.sql.Date;
 public class Order {
 	private int orderid;
 	private Date orderTime;  //在 mysql 中 默认当前时间为    now()   Oracle中默认当前时间 sysdate
-	private double price;
-	private String state;
+	private String price;
+	private String state;	//订单状态
 	private String address;
 	private String phone;
-	private String receiver;
+	private String receiver;	//订单收获人
 	private int uid;//外键，用户id
 	public int getOrderid() {
 		return orderid;
@@ -28,10 +28,10 @@ public class Order {
 	public void setOrderTime(Date orderTime) {
 		this.orderTime = orderTime;
 	}
-	public double getPrice() {
+	public String getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 	public String getState() {
@@ -69,7 +69,7 @@ public class Order {
 		return "Order [orderid=" + orderid + ", orderTime=" + orderTime + ", price=" + price + ", state=" + state
 				+ ", address=" + address + ", phone=" + phone + ", receiver=" + receiver + ", uid=" + uid + "]";
 	}
-	public Order(int orderid, Date orderTime, double price, String state, String address, String phone, String receiver,
+	public Order(int orderid, Date orderTime, String price, String state, String address, String phone, String receiver,
 			int uid) {
 		super();
 		this.orderid = orderid;

@@ -13,6 +13,13 @@ public interface OrderDao {
 	Order findOrder(Order order);
 	
 	/**
+	 * 根据Uid 查询order
+	 * @param order
+	 * @return
+	 */
+	Order findOrderByUid(Order order);
+	
+	/**
 	 * 查询所有的order，如果要筛选，到业务逻辑中去筛选
 	 * @return
 	 */
