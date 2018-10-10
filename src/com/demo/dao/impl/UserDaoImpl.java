@@ -43,6 +43,34 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 		
 		return null;
 	}
+	
+	@Override
+	public User findUserByEmail(String email) {
+		Connection connection=getConn();
+		String sql="select * from user where email=?";
+		PreparedStatement pt=null;
+		ResultSet rs=null;
+		User user2=null;
+		
+		try {
+			pt=connection.prepareStatement(sql);
+			pt.setString(1, email);
+			rs=pt.executeQuery();
+			if(rs.next()) {
+				user2=new User(rs.getInt("uid"),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),
+						rs.getString(6),rs.getString(7),rs.getInt(8),rs.getString(9));
+			}
+			return user2;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			closeAll(connection, pt, rs);
+		}
+		return null;
+	}
 
 	@Override
 	public List<User> getUsers() {
@@ -96,7 +124,7 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 	@Override
 	public boolean addUser(User user) {
 		Connection connection=getConn();
-		String sql="insert into user(uname,upass,realname,email,address,phone,state) values(?,?,?,?,?,?,0)";
+		String sql="insert into user(uname,upass,realname,email,address,phone,state,activecode) values(?,?,?,?,?,?,?,?)";
 		PreparedStatement pt=null;
 		ResultSet rs=null;
 		
@@ -108,7 +136,8 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 			pt.setString(4, user.getEmail());
 			pt.setString(5, user.getAddress());
 			pt.setString(6, user.getPhone());
-			
+			pt.setInt(7, user.getState());
+			pt.setString(8, user.getActivecode());
 			return pt.execute();
 			
 			
@@ -154,5 +183,7 @@ public class UserDaoImpl extends BaseDao implements UserDao{
 		}
 		return false;
 	}
+
+	
 
 }

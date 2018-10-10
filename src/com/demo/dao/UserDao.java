@@ -15,6 +15,8 @@ public interface UserDao {
 	 * @return
 	 */
 	User findUser(User user);
+	
+	User findUserByEmail(String email);
 
 	/**
 	 * 查询所有用户

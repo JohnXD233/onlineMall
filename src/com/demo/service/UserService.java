@@ -20,4 +20,13 @@ public class UserService {
 	public boolean addUser(User user) {
 		return userDao.addUser(user);
 	}
+	
+	public boolean altUser(User user) {
+		return userDao.alterUser(user);
+	}
+	
+	public boolean delUser(int uid) {
+		User user=new User();
+		return userDao.delUser(user);
+	}
 }

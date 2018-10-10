@@ -56,7 +56,7 @@ public class LoginFilter implements Filter {
 						||uri.contains("assets")||uri.contains("images")||uri.contains("Servlet"))*/
 				
 				//成功过滤
-				if(!uri.contains("jsp")||uri.contains("index")||uri.contains("register"))
+				if(!uri.contains("jsp")||uri.contains("index")||uri.contains("register")||uri.contains("m_"))
 				{
 					//登录页放行
 					chain.doFilter(request, response);

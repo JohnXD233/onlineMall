@@ -71,4 +71,14 @@ public class ProductService {
 		
 		return list;
 	}
+	
+	public boolean delProduct(int pid) {
+		Product product=new Product();
+		product.setPid(pid);
+		return productDao.delProduct(product);
+	}
+	
+	public boolean addProduct(Product product) {
+		return productDao.addProduct(product);
+	}
 }

@@ -20,6 +20,7 @@ import com.demo.bean.ShoppingCar;
 import com.demo.bean.User;
 import com.demo.service.OrderService;
 import com.demo.service.ProductService;
+import com.demo.service.RegisterValidateService;
 import com.demo.service.ShoppingCarService;
 import com.demo.service.UserService;
 import com.google.gson.Gson;
@@ -34,6 +35,7 @@ public class UserServlet extends HttpServlet {
 	private ShoppingCarService shoppingCarService=new ShoppingCarService();
 	private ProductService productServic=new ProductService();
 	private OrderService orderService=new OrderService();
+	private RegisterValidateService registerValidateService=new RegisterValidateService();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -88,8 +90,10 @@ public class UserServlet extends HttpServlet {
 			
 			if (user != null) {
 				// 登录成功
-				System.out.println("登录成功");
-
+				System.out.println("登录成功");//这边只有用户登录的，但是要判断是否激活
+				
+				if(user.getState()==0)//表示激活
+				{
 				// 登陆用户 放进session会话
 				request.getSession().setAttribute("login_user", user);
 
@@ -118,6 +122,12 @@ public class UserServlet extends HttpServlet {
 					pCookie.setMaxAge(60 * 60 * 24);
 					response.addCookie(pCookie);
 				}
+				}
+				else if(user.getState()==1)//未激活
+				{
+					response.getWriter().print("{\"status\":\"2\"}");
+					//发送邮件让用户激活,应该是在用户注册的时候
+				}
 
 				// 请求转发,使用ajax，不用请求转发
 				// request.getRequestDispatcher("index.jsp").forward(request, response);
@@ -137,7 +147,9 @@ public class UserServlet extends HttpServlet {
 
 		}
 		else if(oper.equals("register")) {
-			//用户注册
+			
+			//用户注册   发送邮件时要有userdao 中的函数，public User find(String email) 以及激活完成的 修改激活状态
+			
 			String username2=request.getParameter("userName");
 			String realname=request.getParameter("realName");
 			String email=request.getParameter("email");
@@ -150,10 +162,16 @@ public class UserServlet extends HttpServlet {
 			user2.setUname(username2);
 			user2.setUpass(password2);
 			user2.setRealname(realname);
-			user2.setEmail(email);
+			user2.setEmail(email); //邮箱一定不能错
 			user2.setAddress(address);
 			user2.setPhone(phone);
+			user2.setState(1);//未激活
+			user2.setActivecode("123");//默认激活码
 			if(userService.addUser(user2)) {
+				
+				//发送激活邮件
+				registerValidateService.sendEmailForActive(user2);
+				
 				response.getWriter().print("{\"status\":\"1\",\"uname\":\""+username2+"\",\"upass\":'"+password2+"\"}");
 			}
 			else {
@@ -225,14 +243,32 @@ public class UserServlet extends HttpServlet {
 			
 			order.setPrice(product.getPriceInMall());
 			order.setState("1");
-			order.setUid(((User)request.getSession().getAttribute("login_user")).getUid());
+			int uid=((User)request.getSession().getAttribute("login_user")).getUid();
+			order.setUid(uid);
 			order.setOrderTime(new Date(new java.util.Date().getTime()));
 			
 			//System.out.println(address); //成功读取到从模态窗口传来的信息
 			orderService.addOrder(order);
 			
-			//订单加入成功，这边还要删除购物车中的该条记录，以及，订单项的更新，后续界面显示的问题。。。。。。。。。。。。。。。。
+			//订单加入成功，这边还要删除购物车中的该条记录，以及，订单项的更新，后续界面显示的问题返回新的products到checkout.jsp。。。。。。。。。。。。。。。。
+			//删除以及提交订单的购物车信息
+			ShoppingCar oldCar=shoppingCarService.findRecord(pid, uid);
+			shoppingCarService.delRecord(oldCar.getCarid());
 			
+			//添加订单到订单项
+			
+			//回显，新的信息
+			List<ShoppingCar> shoppingCars=shoppingCarService.findRecords(uid);
+			//获取所有购物车中对应的商品
+			List<Product> products=new ArrayList<>();
+			for(ShoppingCar shoppingCar2:shoppingCars)
+			{
+				if(shoppingCar2.getPid()!=-1) {
+					products.add(productServic.findProduct(shoppingCar2.getPid()));
+				}
+			}
+			//这边采用请求转发返回给请求页面
+			request.setAttribute("products", products);
 			
 			request.getRequestDispatcher("checkout.jsp").forward(request, response);
 			//返回显示的问题，加入购物车还没成功
@@ -240,9 +276,28 @@ public class UserServlet extends HttpServlet {
 			//这边不是使用ajax，所以  返回给请求页面要 请求转发  forward 
 			
 		}
-		else if(oper.equals("buy")) {
-			 //立即购买购买时不一样的  立即购买转到订单确认页面
+		else if(oper.equals("activate")) {
+			//用户激活
+			String email = request.getParameter("email");//获取email
+            String activeCode = request.getParameter("validateCode");//激活码
+            boolean result=registerValidateService.checkUserForActive(email, activeCode);
+            if(result)
+            {
+            	//request.setAttribute("activeOrNot", "true");//激活成功
+            	//request.getRequestDispatcher("http://localhost:8080/onlineMall/index.jsp").forward(request, response);
+            	response.sendRedirect("http://localhost:8080/onlineMall/index.jsp");
+            }
+            else {
+            	//request.setAttribute("activeOrNot", "false");//激活失败，跳到别的界面
+            	//request.getRequestDispatcher("https://www.baidu.com/").forward(request, response);
+            	response.sendRedirect("https://www.baidu.com/");
+            }
+
 		}
+		else if(oper.equals("buy")) {
+			 //立即购买购买时不一样的  立即购买转到订单确认页面，不加入购物车，直接购买
+		}
+		
 	}
 
 }

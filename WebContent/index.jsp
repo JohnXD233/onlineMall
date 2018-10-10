@@ -112,7 +112,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						                    <input type="button" id="login" value="Sign in" >
 						                	<label for="checkbox"><input type="checkbox" name="checkbox" id="checkbox"> <i>Remember me</i></label>
 						            	</fieldset>
-						            <span id="forgetPass"><a href="#">Forgot your password?</a></span>
+						            <span id="forgetPass"><a href="#">Forgot your password?</a></span><br>
+						            <span id="managerlogin"><a href="m_login.jsp">Manager Login in.</a></span>
 								</form>
 							</div>
 						</div>
@@ -1031,6 +1032,9 @@ $(function(){
 						myObj = { "name":"runoob", "alexa":10000, "site":null };
 						x = myObj.name; */
 					
+				}
+				else if(data.status=="2"){
+					toastr.success("登录失败，未激活","用户激活");
 				}
 				else{
 					

@@ -46,6 +46,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<li><a href="#">help</a></li>|
 					<li><a href="contact.jsp">Contact</a></li>|
 					<li><a href="#">Delivery information</a></li>
+					<li><a href="pay/pay.html">Pay Order</a></li>
 				</ul>
 			</div>
 			<div class="top_left">
@@ -338,7 +339,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			
 		</div>
 		<div class="clearfix"> </div>
-			<p>Copyright &copy; 2015.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+			<p>Copyright &copy; 2015.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="onlinemall">online MAll</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">在线支付</a></p>
 	</div>
 </div>
 <!-- 模态窗口 -->

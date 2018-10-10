@@ -857,7 +857,7 @@ window.onload = function (){
 		</script>
 		 <div class="registration_form">
 		 <!-- Form registerServlet采用ajax-->
-			<form id="registration_form" method="post">
+			<form id="registration_form" method="post" action="userServlet?oper=register">
 				<div>
 					<label>
 						<input placeholder="userName:" type="text" tabindex="1" name="userName" required autofocus>
@@ -1042,7 +1042,7 @@ $(function(){
 	
 	$("#register-submit").click(function(){
 		$.ajax({
-			url:"ruserServlet",
+			url:"userServlet",
 			data:{"userName":userName,
 				"realName":realName,
 				"email":email,
@@ -1055,7 +1055,7 @@ $(function(){
 			success:function(data){
 				//console.log(data);
 				if(data.status=="1"){
-					toastr.success("注册成功","用户注册");
+					toastr.success("注册成功，激活邮件已发送，请注意查收","用户注册");
 					$("#login-uname").val(data.uname);
 					$("#login-upass").val(data.upass);
 				}
